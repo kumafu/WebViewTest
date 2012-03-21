@@ -22,6 +22,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    [web loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://yahoo.jp"]]];
 }
 
 - (void)viewDidUnload
@@ -57,4 +58,31 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
+/*
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    NSLog(@"Loading: %@", [request URL]);
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    return YES;
+}
+ */
+
+- (void)webViewDidStartLoad:(UIWebView *)webView{
+    NSLog(@"didStart: %@; stillLoading:%@", [[webView request]URL],
+          (webView.loading?@"YES":@"NO"));
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    NSLog(@"didFinish: %@; stillLoading:%@", [[webView request]URL],
+          (webView.loading?@"YES":@"NO"));
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+}
+
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+    NSLog(@"didFail: %@; stillLoading:%@", [[webView request]URL],
+          (webView.loading?@"YES":@"NO"));
+    //NSLog(@"prog : %f",[webView res] exp);
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+}
 @end
